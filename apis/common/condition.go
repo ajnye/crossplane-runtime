@@ -63,6 +63,7 @@ const (
 	ReasonReconcileSuccess ConditionReason = "ReconcileSuccess"
 	ReasonReconcileError   ConditionReason = "ReconcileError"
 	ReasonReconcilePaused  ConditionReason = "ReconcilePaused"
+	ReasonReconcilePending ConditionReason = "ReconcilePending"
 )
 
 // See https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
@@ -310,5 +311,18 @@ func ReconcilePaused() Condition {
 		Status:             corev1.ConditionFalse,
 		LastTransitionTime: metav1.Now(),
 		Reason:             ReasonReconcilePaused,
+	}
+}
+
+// ReconcilePending returns a condition indicating that reconciliation is
+// deferred pending an in-flight async operation. Unlike ReconcileError, this
+// does not trigger exponential backoff.
+func ReconcilePending(msg string) Condition {
+	return Condition{
+		Type:               TypeSynced,
+		Status:             corev1.ConditionFalse,
+		LastTransitionTime: metav1.Now(),
+		Reason:             ReasonReconcilePending,
+		Message:            msg,
 	}
 }

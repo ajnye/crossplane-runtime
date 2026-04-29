@@ -60,6 +60,7 @@ const (
 	ReasonReconcileSuccess = common.ReasonReconcileSuccess
 	ReasonReconcileError   = common.ReasonReconcileError
 	ReasonReconcilePaused  = common.ReasonReconcilePaused
+	ReasonReconcilePending = common.ReasonReconcilePending
 )
 
 // See https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
@@ -133,4 +134,10 @@ func ReconcileError(err error) Condition {
 // the managed resource is paused via the pause annotation.
 func ReconcilePaused() Condition {
 	return common.ReconcilePaused()
+}
+
+// ReconcilePending returns a condition indicating that reconciliation is
+// deferred pending an in-flight async operation.
+func ReconcilePending(msg string) Condition {
+	return common.ReconcilePending(msg)
 }
